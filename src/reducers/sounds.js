@@ -22,6 +22,7 @@ import {
   REQUEST_RANDOM_SOUND,
   SELECT_ALL,
   SET_DURATION_MAX,
+  SET_DURATION_MIN,
   SET_RANGE,
   SET_RANGE_FIRST,
   SET_RANGE_LAST,
@@ -36,6 +37,7 @@ const initialState = {
   count: 0,
   duration: 0,
   durationMax: 1,
+  durationMin: 0,
   isDoubleSpeed: false,
   isNormalize: false,
   isPaused: false,
@@ -152,6 +154,11 @@ export default function sounds(state = initialState, action) {
       return {
         ...state,
         durationMax: action.value === '' ? '' : Math.max(0, action.value),
+      };
+    case SET_DURATION_MIN:
+      return {
+        ...state,
+        durationMin: action.value === '' ? '' : Math.max(0, action.value),
       };
     case TOGGLE_SLOT:
       return {

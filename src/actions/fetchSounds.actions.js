@@ -13,7 +13,9 @@ export default function fetchSounds(payload) {
       dispatch(rejectSounds());
     } else {
       const fields = 'id';
-      const filter = `duration:[0 TO ${state.sounds.durationMax}]`;
+      const filter = `duration:[${state.sounds.durationMin} TO ${
+        state.sounds.durationMax
+      }]`;
       dispatch(requestSounds(query));
       return fetch(
         `${

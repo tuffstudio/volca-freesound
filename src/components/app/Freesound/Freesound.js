@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Freesound.css';
 import fetchSounds from '../../../actions/fetchSounds.actions';
-import { setDurationMax } from '../../../actions/volca.actions';
+import { setDurationMax, setDurationMin } from '../../../actions/volca.actions';
 import FormControl from '../../molecules/FormControl';
 import Row from '../../atoms/Row';
 import Section from '../../molecules/Section';
@@ -15,6 +15,8 @@ class Freesound extends React.PureComponent {
     count: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
     durationMax: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
+    durationMin: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
       .isRequired,
     isStarted: PropTypes.bool.isRequired,
   };
@@ -36,10 +38,32 @@ class Freesound extends React.PureComponent {
   }
 
   render() {
-    const { count, dispatch, durationMax, isStarted } = this.props;
+    const { count, dispatch, durationMax, durationMin, isStarted } = this.props;
 
     return (
       <Section title="Freesound settings">
+        <Row>
+          <FormControl
+            disabled={isStarted ? 'disabled' : ''}
+            id="duration_min"
+            label="Min. duration"
+            max="none"
+            min="0"
+            onChange={e => {
+              e.preventDefault();
+              dispatch(setDurationMin(e.target.value));
+              dispatch(
+                fetchSounds({
+                  query: '',
+                  page: 1,
+                  pageSize: 1,
+                }),
+              );
+            }}
+            type="number"
+            value={durationMin}
+          />
+        </Row>
         <Row>
           <FormControl
             disabled={isStarted ? 'disabled' : ''}
@@ -76,6 +100,7 @@ function mapStateToProps(state) {
   return {
     count: state.sounds.count,
     durationMax: state.sounds.durationMax,
+    durationMin: state.sounds.durationMin,
     isStarted: state.sounds.isStarted,
   };
 }
